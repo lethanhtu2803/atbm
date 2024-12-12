@@ -15,6 +15,7 @@ import com.demo.entities.Chat;
 import com.demo.entities.ConnectDB;
 import com.demo.entities.Invoice;
 import com.demo.entities.Service;
+import com.google.gson.Gson;
 
 public class AccountServiceModel {
 	public List<AccountService> findAll(){
@@ -254,6 +255,7 @@ public class AccountServiceModel {
 	
 	public static void main(String[] args) {
 		AccountServiceModel accountServiceModel = new AccountServiceModel();
-		System.out.println(accountServiceModel.findAccountByAccountId(2));
+		System.out.println(accountServiceModel.findAll().get(0));
+		System.out.println(new Gson().toJson(accountServiceModel.findAll().get(0)));
 	}
 }

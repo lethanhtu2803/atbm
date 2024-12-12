@@ -241,7 +241,7 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 						for (Service service : serviceModel.findAll()) {
 						%>
 						<form action="${pageContext.request.contextPath}/plan"
-							method="get">
+							method="get" onsubmit="return false;">
 							<input type="hidden" name="action" value="buy"> <input
 								type="hidden" name="id" value="<%=service.getId()%>">
 							<div class="pricing-item">
@@ -270,7 +270,7 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 											<%
 											for (Duration duration : durationModel.findAll()) {
 											%>
-											<option value="<%=duration.getId()%>"><%=durationLanguageModel.find(duration.getId(), languageModel.findByLanguageID(language).getId()) != null
+											<option class="optionDurationID" value="<%=duration.getId()%>"><%=durationLanguageModel.find(duration.getId(), languageModel.findByLanguageID(language).getId()) != null
 		? durationLanguageModel.find(duration.getId(), languageModel.findByLanguageID(language).getId()).getName()
 		: duration.getName()%></option>
 											<%
@@ -290,9 +290,9 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 								
 								</div>
 							</div>
-								
+								<button data-id="<%= service.getId() %>" class="muangay">Mua ngay</button>
 						</form>
-						<button id="muangay">Mua ngay</button>
+						
 						<%
 						}
 						%>
@@ -370,71 +370,69 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 	</div>
 </div>
 <div id="dialog1" style="display: none;" title="Basic dialog">
-	<p>Mã hash đơn hàng của bạn là: 6f7f571189c1e88a79c82b4f76fa8438</p>
+	<p>Mã hash đơn hàng của bạn là: <span id="mahash"></span></p>
 	<p>Chữ ký của bạn là: <span id="chuky"></span></p>
 	<button id="batdauky">Bắt đầu ký</button>
 </div>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Lấy tham chiếu đến button
-    const button = document.querySelector("#dialog1 button");
 
-    // Thêm sự kiện click cho button
-    button.addEventListener("click", function () {
-        // Tạo kết nối WebSocket
-        const socket = new WebSocket("ws://localhost:8080/projectGroup2/key");
-
-        // Gửi tin nhắn khi kết nối thành công
-        socket.addEventListener("open", function () {
-            const message = "6f7f571189c1e88a79c82b4f76fa8438";
-            socket.send(message);
-            console.log("Sent: " + message);
-        });
-
-        // Xử lý tin nhắn từ server
-        socket.addEventListener("message", function (event) {
-            console.log("Received: " + event.data);
-            const chuky = document.querySelector("#chuky");
-            chuky.textContent = event.data;
-        });
-
-        // Xử lý khi kết nối đóng
-        socket.addEventListener("close", function () {
-            console.log("WebSocket connection closed.");
-        });
-
-        // Xử lý lỗi
-        socket.addEventListener("error", function (error) {
-            console.error("WebSocket error: ", error);
-        });
-    });
-});
-</script>
 
 <script>
 	$(function() {
-		$("#muangay").click(function() {
+		$(".muangay").click(function() {
+			var id = $(this).attr('data-id');
+			console.log(id);
+
+			var form = $(this).closest('form'); // Lấy form chứa button "Mua ngay"
+	        var durationID = form.find('select[name="duration"]').val();
+			console.log(durationID);
+
+			// Hiển thị dialog
 			$("#dialog1").dialog();
 			$("#dialog1").css('display', 'block');
-			  $(document).ready(function() {
-	        	 $.ajax({
-	                 url: "${pageContext.request.contextPath}/plan", 
-	                 type: 'POST',
-	                 data:{
-	                	 action: 'hash'
-	                 },
-	                 success: function(hash) {
-	        
-						console.log(hash);
-						
-					}
-	             });
-	        }); 
+
+			// Gửi yêu cầu AJAX
+	        $.ajax({
+	             url: "${pageContext.request.contextPath}/plan", 
+	             type: 'POST',
+	             data: {
+	                 action: 'hash',
+	                 id: id,
+	                 durationID: durationID
+	             },
+	             success: function(hash) {
+					 console.log(hash);
+						$('#mahash').text(hash);
+					 // Khi nhận được hash từ server, tạo WebSocket và gửi dữ liệu
+					 const socket = new WebSocket("ws://localhost:8080/projectGroup2/key");
+
+					 // Gửi tin nhắn khi kết nối WebSocket mở
+					 socket.addEventListener("open", function () {
+					     socket.send(hash);
+					     console.log("Sent: " + hash);
+					 });
+
+					 // Xử lý tin nhắn từ server
+					 socket.addEventListener("message", function (event) {
+					     console.log("Received: " + event.data);
+					     const chuky = document.querySelector("#chuky");
+					     chuky.textContent = event.data;
+					 });
+
+					 // Xử lý khi kết nối đóng
+					 socket.addEventListener("close", function () {
+					     console.log("WebSocket connection closed.");
+					 });
+
+					 // Xử lý lỗi WebSocket
+					 socket.addEventListener("error", function (error) {
+					     console.error("WebSocket error: ", error);
+					 });
+	             }
+	        });
 		});
-		
-	
 	});
 </script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#tab1").click(function() {
