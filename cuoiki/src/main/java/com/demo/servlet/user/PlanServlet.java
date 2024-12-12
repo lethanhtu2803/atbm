@@ -29,6 +29,7 @@ import com.demo.entities.Invoice;
 import com.demo.entities.Log;
 import com.demo.entities.Service;
 import com.demo.ex.ConfigLog;
+import com.demo.helpers.MD5;
 import com.demo.helpers.PostHelper;
 import com.demo.models.AccountDetailsModel;
 import com.demo.models.AccountServiceModel;
@@ -36,6 +37,7 @@ import com.demo.models.DurationModel;
 import com.demo.models.InvoiceModel;
 import com.demo.models.LogModel;
 import com.demo.models.ServiceModel;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class ServiceServlet
@@ -211,6 +213,71 @@ public class PlanServlet extends HttpServlet {
 			throws ServletException, IOException {
 		PrintWriter printWriter = response.getWriter();
 		
+		String serviceId = request.getParameter("id");
+		int durationId = Integer.parseInt(request.getParameter("durationID"));
+		Calendar calendar = Calendar.getInstance();
+		AccountServiceModel accountServiceModel = new AccountServiceModel();
+		AccountDetailsModel accountDetailsModel = new AccountDetailsModel();
+		ServiceModel serviceModel = new ServiceModel();
+		DurationModel durationModel = new DurationModel();
+		Duration duration = new Duration();
+		int spaceIndex = durationModel.findById(durationId).getName().indexOf(' ');
+	    String numberString = durationModel.findById(durationId).getName().substring(0, spaceIndex);
+		calendar.add(Calendar.MONTH, Integer.parseInt(numberString));
+		Date endDate = calendar.getTime();
+		duration.setStatus(true);
+		LogModel logModel = new LogModel();
+		Account account = (Account) request.getSession().getAttribute("account");
+		if (account == null) {
+			request.getSession().setAttribute("msg", "Bạn cần đăng nhập để mua gói dịch vụ");
+			response.sendRedirect("plan");
+		} else {
+			Accountdetails accountdetails = accountDetailsModel.findAccountByAccountID(account.getId());
+			accountdetails = accountDetailsModel.findAccountByAccountID(account.getId());
+			if (accountdetails == null) {
+				request.getSession().setAttribute("msg", "Bạn cần phải cập nhật thông tin tài khoản để mua dịch vụ");
+				response.sendRedirect("account");
+			} else {
+				if (accountdetails.getBalance() > serviceModel.findByID(Integer.parseInt(serviceId)).getPrice()) {
+
+					AccountService accountService = new AccountService();
+					accountService.setAccountID(account.getId());
+					accountService.setServiceID(Integer.parseInt(serviceId));
+					accountService.setDurationID(durationId);
+					accountService.setDescription(
+							"Đăng kí gói: " + serviceModel.findByID(Integer.parseInt(serviceId)).getName() + " / " + durationModel.findById(durationId).getName());
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.0");
+					accountService.setCreated(new Date());
+					accountService.setEndService(endDate);
+					accountService.setStatus(true);
+					accountService.setSaleID(0);
+					Gson gson = new Gson();
+					MD5 md5 = new MD5();
+					String hash = md5.hashMD5(gson.toJson(accountService));
+					System.out.println(gson.toJson(accountService));
+					System.out.println(accountService);
+					System.out.println(hash);
+					printWriter.write(hash);
+//					if (accountServiceModel.register(accountService)) {
+//						logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AccountID: " + account.getId() + " - đã mua gói dịch vụ",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), null, "Gói dịch vụ đã mua là: " + serviceModel.findByID(Integer.parseInt(serviceId)).getName() + " / " + durationModel.findById(durationId).getName()));
+//						accountdetails.setBalance(accountdetails.getBalance()
+//								- serviceModel.findByID(Integer.parseInt(serviceId)).getPrice());
+//						accountDetailsModel.update(accountdetails);
+//						request.getSession().removeAttribute("accountdetails");
+//						request.getSession().setAttribute("accountdetails", accountdetails);
+//						request.getSession().setAttribute("msg", "Mua thành công");
+//						
+//					} else {
+//						request.getSession().setAttribute("msg", "Mua thất bại");
+//						response.sendRedirect("plan");
+//					}
+
+				} else {
+					request.getSession().setAttribute("msg", "Bạn không đủ tiền để mua gói dịch vụ này");
+					response.sendRedirect("plan");
+				}
+			}
+		}
 	}
 
 }
