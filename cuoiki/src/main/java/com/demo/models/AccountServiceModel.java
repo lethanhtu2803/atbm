@@ -35,6 +35,7 @@ public class AccountServiceModel {
 				accountService.setEndService(resultSet.getTimestamp("endService"));
 				accountService.setStatus(resultSet.getBoolean("status"));
 				accountServices.add(accountService);
+				Thread.sleep(2000);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -255,7 +256,8 @@ public class AccountServiceModel {
 	
 	public static void main(String[] args) {
 		AccountServiceModel accountServiceModel = new AccountServiceModel();
-		System.out.println(accountServiceModel.findAll().get(0));
-		System.out.println(new Gson().toJson(accountServiceModel.findAll().get(0)));
+		System.out.println(accountServiceModel.findAll());
+		
+		
 	}
 }
