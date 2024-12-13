@@ -113,6 +113,7 @@ public class KeyJFrame extends JFrame {
 		contentPane.add(scrollPane_1);
 
 		jTextAreaMaHoaDonHang = new JTextArea();
+		jTextAreaMaHoaDonHang.setLineWrap(true);
 		scrollPane_1.setViewportView(jTextAreaMaHoaDonHang);
 
 		scrollPane_2 = new JScrollPane();
