@@ -18,6 +18,19 @@ import com.demo.entities.Service;
 import com.google.gson.Gson;
 
 public class AccountServiceModel {
+	private AccountService accountService;
+	
+	public AccountServiceModel(AccountService accountService) {
+		super();
+		this.accountService = accountService;
+	}
+	public AccountService saveAccountService() {
+		return accountService;
+	}
+
+	public AccountServiceModel() {
+		super();
+	}
 	public List<AccountService> findAll(){
 		List<AccountService> accountServices = new ArrayList<AccountService>();
 		try {

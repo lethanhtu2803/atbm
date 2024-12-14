@@ -291,6 +291,7 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 								</div>
 							</div>
 								<button data-id="<%= service.getId() %>" class="muangay">Mua ngay</button>
+								
 						</form>
 						
 						<%
@@ -370,9 +371,16 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 	</div>
 </div>
 <div id="dialog1" style="display: none;" title="Basic dialog">
-	<p>Mã hash đơn hàng của bạn là: <span id="mahash"></span></p>
+	<form action="${pageContext.request.contextPath}/plan" method="post">
+		<p>Mã hash đơn hàng của bạn là: <span id="mahash"></span></p>
 	<p>Chữ ký của bạn là: <span id="chuky"></span></p>
-	<button id="batdauky">Bắt đầu ký</button>
+	<input name="chuky" type="hidden" value="" id="chukyForm">
+	<input type="hidden" name="action" value="checkChuKy">
+	<button type="submit" id="batdauky">Kiểm tra chữ kí</button>
+	</form>
+	
+
+	
 </div>
 
 
@@ -416,6 +424,8 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 					     console.log("Received: " + event.data);
 					     const chuky = document.querySelector("#chuky");
 					     chuky.textContent = event.data;
+					     const chukyForm = document.querySelector("#chukyForm");
+					     chukyForm.value = event.data;
 					 });
 
 					 // Xử lý khi kết nối đóng

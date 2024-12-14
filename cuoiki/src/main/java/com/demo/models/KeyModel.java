@@ -2,10 +2,15 @@ package com.demo.models;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.demo.entities.ConnectDB;
 import com.demo.entities.Contact;
+import com.demo.entities.Duration;
+import com.demo.entities.Feedback;
 import com.demo.entities.Key;
 
 public class KeyModel {
@@ -45,5 +50,34 @@ public class KeyModel {
 			ConnectDB.disconnect();
 		}
 		return status;
+	}
+	
+	public Key findByAccountID(int userID){
+		Key key = null;
+		try {
+			PreparedStatement preparedStatement = ConnectDB.connection().prepareStatement("select * from `key` where userID = ?");
+			preparedStatement.setInt(1, userID);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				key = new Key();
+				key.setId(resultSet.getInt("id"));
+				key.setUserID(resultSet.getInt("userID"));
+				key.setPublicKey(resultSet.getString("publicKey"));
+				key.setStartTime(resultSet.getDate("startTime"));
+				key.setEndTime(resultSet.getDate("endTime"));
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			key = null;
+			// TODO: handle exception
+		} finally {
+			ConnectDB.disconnect();
+		}
+		
+		return key;
+	}
+	public static void main(String[] args) {
+		System.out.println(new KeyModel().findByAccountID(1));
 	}
 }

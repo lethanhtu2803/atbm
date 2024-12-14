@@ -50,5 +50,8 @@ public class Key {
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
+	public Key() {
+		super();
+	}
 	
 }
