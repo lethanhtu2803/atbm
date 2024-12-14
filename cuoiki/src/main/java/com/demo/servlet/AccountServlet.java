@@ -158,43 +158,14 @@ public class AccountServlet extends HttpServlet {
 //				" 	\"avatar\":\""+ avatar +"\"\n" +
 //				"}";
 		String pass = BCrypt.hashpw(newPass, BCrypt.gensalt());
-		AccountPartial beforeValue = null;
-		AccountPartial afterValue = null;
-//		afterValue.setName(new String(fullName.getBytes("ISO-8859-1"), "UTF-8")); // set full name
-//		afterValue.setPassword(BCrypt.hashpw(newPass, BCrypt.gensalt())); // set password
-//		afterValue.setAddress(new String(address.getBytes("ISO-8859-1"), "UTF-8")); // set address
-//		afterValue.setEmail(email); // set email
-//		afterValue.setPhoneNumber(phoneNumber); // set phoneNumber
-//		afterValue.setBirthday(accountDetailsModel.findAccountByAccountID(account.getId()).getBirthday()); // set birthday
-//		afterValue.setAvatar(avatar); // set ava
-		beforeValue = new AccountPartial(
-				accountDetailsModel.findAccountByAccountID(account.getId()).getName() == null ? null
-						: accountDetailsModel.findAccountByAccountID(account.getId()).getName(),
-				account.getPassword() != null ? account.getPassword() : null,
-				accountDetailsModel.findAccountByAccountID(account.getId()).getBirthday() != null
-						? accountDetailsModel.findAccountByAccountID(account.getId()).getBirthday()
-						: null,
-				account.getEmail() != null ? account.getEmail() : null,
-				accountDetailsModel.findAccountByAccountID(account.getId()).getPhonenumber() != null
-						? accountDetailsModel.findAccountByAccountID(account.getId()).getPhonenumber()
-						: null,
-				accountDetailsModel.findAccountByAccountID(account.getId()).getAddress() != null
-						? accountDetailsModel.findAccountByAccountID(account.getId()).getAddress()
-						: null,
-				accountDetailsModel.findAccountByAccountID(account.getId()).getAvatar() != null
-						? accountDetailsModel.findAccountByAccountID(account.getId()).getAvatar()
-						: null);
-		afterValue = new AccountPartial(new String(fullName.getBytes("ISO-8859-1"), "UTF-8"), pass,
-				accountDetailsModel.findAccountByAccountID(account.getId()).getBirthday(), email, phoneNumber,
-				new String(address.getBytes("ISO-8859-1"), "UTF-8"), avatar);
-		System.out.println(gson.toJson(beforeValue));
+		
+		
+	
 		if (accountDetailsModel.findAccountByAccountID(account.getId()) == null) {
 			if (accountDetailsModel.create(accountdetails) && accountModel.update(account)) {
-				System.out.println(gson.toJson(afterValue));
-				logModel.create(new Log(IPAddressUtil.getPublicIPAddress(), "alert",
-						"AccountID: " + account.getId() + " cập nhật tài khoản",
-						ConfigLog.ipconfig(request).getCountryLong(), new Timestamp(new Date().getTime()),
-						gson.toJson(beforeValue), gson.toJson(afterValue)));
+			
+				
+					
 				request.getSession().removeAttribute("accountdetails");
 				request.getSession().setAttribute("accountdetails", accountDetailsModel
 						.findAccountByAccountID(accountModel.findAccountByUsername(account.getUsername()).getId()));
@@ -207,10 +178,7 @@ public class AccountServlet extends HttpServlet {
 		} else {
 
 			if (accountDetailsModel.update(accountdetails) && accountModel.update(account)) {
-				logModel.create(new Log(IPAddressUtil.getPublicIPAddress(), "alert",
-						"AccountID: " + account.getId() + " cập nhật tài khoản",
-						ConfigLog.ipconfig(request).getCountryLong(), new Timestamp(new Date().getTime()),
-						gson.toJson(beforeValue), gson.toJson(afterValue)));
+			
 				request.getSession().removeAttribute("accountdetails");
 				request.getSession().setAttribute("accountdetails", accountDetailsModel
 						.findAccountByAccountID(accountModel.findAccountByUsername(account.getUsername()).getId()));

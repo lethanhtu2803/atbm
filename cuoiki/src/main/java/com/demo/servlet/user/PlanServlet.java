@@ -26,15 +26,18 @@ import com.demo.entities.AccountService;
 import com.demo.entities.Accountdetails;
 import com.demo.entities.Duration;
 import com.demo.entities.Invoice;
+import com.demo.entities.Key;
 import com.demo.entities.Log;
 import com.demo.entities.Service;
 import com.demo.ex.ConfigLog;
 import com.demo.helpers.MD5;
 import com.demo.helpers.PostHelper;
+import com.demo.helpers.RSA;
 import com.demo.models.AccountDetailsModel;
 import com.demo.models.AccountServiceModel;
 import com.demo.models.DurationModel;
 import com.demo.models.InvoiceModel;
+import com.demo.models.KeyModel;
 import com.demo.models.LogModel;
 import com.demo.models.ServiceModel;
 import com.google.gson.Gson;
@@ -44,6 +47,7 @@ import com.google.gson.Gson;
  */
 @WebServlet("/plan")
 public class PlanServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -139,63 +143,68 @@ public class PlanServlet extends HttpServlet {
 
 	protected void doGet_Buy(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String serviceId = request.getParameter("id");
-		int durationId = Integer.parseInt(request.getParameter("duration"));
-		Calendar calendar = Calendar.getInstance();
-		AccountServiceModel accountServiceModel = new AccountServiceModel();
-		AccountDetailsModel accountDetailsModel = new AccountDetailsModel();
-		ServiceModel serviceModel = new ServiceModel();
-		DurationModel durationModel = new DurationModel();
-		Duration duration = new Duration();
-		int spaceIndex = durationModel.findById(durationId).getName().indexOf(' ');
-	    String numberString = durationModel.findById(durationId).getName().substring(0, spaceIndex);
-		calendar.add(Calendar.MONTH, Integer.parseInt(numberString));
-		Date endDate = calendar.getTime();
-		duration.setStatus(true);
-		LogModel logModel = new LogModel();
-		Account account = (Account) request.getSession().getAttribute("account");
-		if (account == null) {
-			request.getSession().setAttribute("msg", "Bạn cần đăng nhập để mua gói dịch vụ");
-			response.sendRedirect("plan");
-		} else {
-			Accountdetails accountdetails = accountDetailsModel.findAccountByAccountID(account.getId());
-			accountdetails = accountDetailsModel.findAccountByAccountID(account.getId());
-			if (accountdetails == null) {
-				request.getSession().setAttribute("msg", "Bạn cần phải cập nhật thông tin tài khoản để mua dịch vụ");
-				response.sendRedirect("account");
-			} else {
-				if (accountdetails.getBalance() > serviceModel.findByID(Integer.parseInt(serviceId)).getPrice()) {
-
-					AccountService accountService = new AccountService();
-					accountService.setAccountID(account.getId());
-					accountService.setServiceID(Integer.parseInt(serviceId));
-					accountService.setDurationID(durationId);
-					accountService.setDescription(
-							"Đăng kí gói: " + serviceModel.findByID(Integer.parseInt(serviceId)).getName() + " / " + durationModel.findById(durationId).getName());
-					accountService.setCreated(new Date());
-					accountService.setEndService(endDate);
-					accountService.setStatus(true);
-					accountService.setSaleID(0);
-					if (accountServiceModel.register(accountService)) {
-						logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AccountID: " + account.getId() + " - đã mua gói dịch vụ",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), null, "Gói dịch vụ đã mua là: " + serviceModel.findByID(Integer.parseInt(serviceId)).getName() + " / " + durationModel.findById(durationId).getName()));
-						accountdetails.setBalance(accountdetails.getBalance()
-								- serviceModel.findByID(Integer.parseInt(serviceId)).getPrice());
-						accountDetailsModel.update(accountdetails);
-						request.getSession().removeAttribute("accountdetails");
-						request.getSession().setAttribute("accountdetails", accountdetails);
-						request.getSession().setAttribute("msg", "Mua thành công");
-						response.sendRedirect("plan");
-					} else {
-						request.getSession().setAttribute("msg", "Mua thất bại");
-						response.sendRedirect("plan");
-					}
-
-				} else {
-					request.getSession().setAttribute("msg", "Bạn không đủ tiền để mua gói dịch vụ này");
-					response.sendRedirect("plan");
-				}
-			}
-		}
+		String chuky = request.getParameter("chuky");
+		System.out.println(chuky);
+		
+		
+		
+//		String serviceId = request.getParameter("id");
+//		int durationId = Integer.parseInt(request.getParameter("duration"));
+//		Calendar calendar = Calendar.getInstance();
+//		AccountServiceModel accountServiceModel = new AccountServiceModel();
+//		AccountDetailsModel accountDetailsModel = new AccountDetailsModel();
+//		ServiceModel serviceModel = new ServiceModel();
+//		DurationModel durationModel = new DurationModel();
+//		Duration duration = new Duration();
+//		int spaceIndex = durationModel.findById(durationId).getName().indexOf(' ');
+//	    String numberString = durationModel.findById(durationId).getName().substring(0, spaceIndex);
+//		calendar.add(Calendar.MONTH, Integer.parseInt(numberString));
+//		Date endDate = calendar.getTime();
+//		duration.setStatus(true);
+//		LogModel logModel = new LogModel();
+//		Account account = (Account) request.getSession().getAttribute("account");
+//		if (account == null) {
+//			request.getSession().setAttribute("msg", "Bạn cần đăng nhập để mua gói dịch vụ");
+//			response.sendRedirect("plan");
+//		} else {
+//			Accountdetails accountdetails = accountDetailsModel.findAccountByAccountID(account.getId());
+//			accountdetails = accountDetailsModel.findAccountByAccountID(account.getId());
+//			if (accountdetails == null) {
+//				request.getSession().setAttribute("msg", "Bạn cần phải cập nhật thông tin tài khoản để mua dịch vụ");
+//				response.sendRedirect("account");
+//			} else {
+//				if (accountdetails.getBalance() > serviceModel.findByID(Integer.parseInt(serviceId)).getPrice()) {
+//
+//					AccountService accountService = new AccountService();
+//					accountService.setAccountID(account.getId());
+//					accountService.setServiceID(Integer.parseInt(serviceId));
+//					accountService.setDurationID(durationId);
+//					accountService.setDescription(
+//							"Đăng kí gói: " + serviceModel.findByID(Integer.parseInt(serviceId)).getName() + " / " + durationModel.findById(durationId).getName());
+//					accountService.setCreated(new Date());
+//					accountService.setEndService(endDate);
+//					accountService.setStatus(true);
+//					accountService.setSaleID(0);
+//					if (accountServiceModel.register(accountService)) {
+//						logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AccountID: " + account.getId() + " - đã mua gói dịch vụ",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), null, "Gói dịch vụ đã mua là: " + serviceModel.findByID(Integer.parseInt(serviceId)).getName() + " / " + durationModel.findById(durationId).getName()));
+//						accountdetails.setBalance(accountdetails.getBalance()
+//								- serviceModel.findByID(Integer.parseInt(serviceId)).getPrice());
+//						accountDetailsModel.update(accountdetails);
+//						request.getSession().removeAttribute("accountdetails");
+//						request.getSession().setAttribute("accountdetails", accountdetails);
+//						request.getSession().setAttribute("msg", "Mua thành công");
+//						response.sendRedirect("plan");
+//					} else {
+//						request.getSession().setAttribute("msg", "Mua thất bại");
+//						response.sendRedirect("plan");
+//					}
+//
+//				} else {
+//					request.getSession().setAttribute("msg", "Bạn không đủ tiền để mua gói dịch vụ này");
+//					response.sendRedirect("plan");
+//				}
+//			}
+//		}
 	}
 
 	/**
@@ -207,10 +216,14 @@ public class PlanServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		if(action.equals("hash")) {
 			doPost_Hash(request, response);
+		} else if(action.equals("checkChuKy")){
+			doPost_CheckChuKy(request, response);
+			
 		}
 	}
 	protected void doPost_Hash(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("hash");
 		PrintWriter printWriter = response.getWriter();
 		
 		String serviceId = request.getParameter("id");
@@ -238,7 +251,7 @@ public class PlanServlet extends HttpServlet {
 				request.getSession().setAttribute("msg", "Bạn cần phải cập nhật thông tin tài khoản để mua dịch vụ");
 				response.sendRedirect("account");
 			} else {
-				if (accountdetails.getBalance() > serviceModel.findByID(Integer.parseInt(serviceId)).getPrice()) {
+				if (true) {
 
 					AccountService accountService = new AccountService();
 					accountService.setAccountID(account.getId());
@@ -254,6 +267,7 @@ public class PlanServlet extends HttpServlet {
 					Gson gson = new Gson();
 					MD5 md5 = new MD5();
 					String hash = md5.hashMD5(gson.toJson(accountService));
+					request.getSession().setAttribute("accountService", accountService);
 					System.out.println(gson.toJson(accountService));
 					System.out.println(accountService);
 					System.out.println(hash);
@@ -278,6 +292,43 @@ public class PlanServlet extends HttpServlet {
 				}
 			}
 		}
+	}
+	protected void doPost_CheckChuKy(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String chuky = request.getParameter("chuky");
+		System.out.println("chuky: " + chuky);
+		KeyModel keyModel = new KeyModel();
+		Account account = (Account) request.getSession().getAttribute("account");
+		System.out.println(account.getId());
+		RSA rsa = new RSA();
+		Key key = keyModel.findByAccountID(account.getId());
+		System.out.println(key.getPublicKey().trim());
+		try {
+			System.out.println("chu ky: " + chuky.trim());
+			System.out.println("public key: " + key.getPublicKey().trim());
+			System.out.println(rsa.decryptWithPublicKey(chuky.trim(), key.getPublicKey().trim()));
+			if(request.getSession().getAttribute("accountService") != null) {
+				System.out.println(request.getSession().getAttribute("accountService"));
+				AccountService accountService = (AccountService) request.getSession().getAttribute("accountService");
+				System.out.println(accountService);
+				AccountServiceModel accountServiceModel = new AccountServiceModel();
+				if(accountServiceModel.register(accountService)) {
+					System.out.println("thanh cong");
+					request.getSession().setAttribute("msg", "Đăng ký gói thành công");
+					response.sendRedirect("plan");
+				} else {
+					System.out.println("k thanh cong");
+				}
+			}
+			
+			
+		} catch (Exception e) {
+			request.getSession().setAttribute("msg", "Thao tác xác nhận chữ ký không đúng, vui lòng đăng ký gói lại");
+			response.sendRedirect("plan");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

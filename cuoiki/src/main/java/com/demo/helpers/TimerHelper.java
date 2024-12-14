@@ -52,14 +52,22 @@ public class TimerHelper implements ServletContextListener {
 	 */
 	public void contextInitialized(ServletContextEvent sce) {
 
-		PostingTimer postingTimer = new PostingTimer();
-		timer.scheduleAtFixedRate(postingTimer, 0, 5000);
-		MSGTimer msgTimer = new MSGTimer(sce.getServletContext());
-		timer.scheduleAtFixedRate(msgTimer, 0, 1000 * 60 * 60 * 23);
+//		PostingTimer postingTimer = new PostingTimer();
+//		timer.scheduleAtFixedRate(postingTimer, 0, 5000);
+//		MSGTimer msgTimer = new MSGTimer(sce.getServletContext());
+//		timer.scheduleAtFixedRate(msgTimer, 0, 1000 * 60 * 60 * 23);
 		LogModel logModel = new LogModel();
-		int oldLogSize = logModel.findAll().size();
-        LogTask task = new LogTask(oldLogSize);
-        timer.scheduleAtFixedRate(task, 0, 3000); 
+		if(logModel.findAll() != null) {
+			System.out.println("logmodel.findall");
+			int oldLogSize = logModel.findAll().size();
+	        LogTask task = new LogTask(oldLogSize);
+	        timer.scheduleAtFixedRate(task, 0, 3000); 
+		} else {
+			System.out.println("logmodel.findall null");
+		}
+		
+		
+
 
 		
 
