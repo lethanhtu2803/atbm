@@ -108,15 +108,18 @@
                     <!-- Form Row-->
                     <div class="row gx-3 mb-3">
                         <!-- Form Group (phone number)-->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="small mb-1" for="inputPhone"><span style="color: red;">*</span> <%= messages.getString("phone") %></label>
                             <input class="form-control" value="${sessionScope.accountdetails != null ? sessionScope.accountdetails.phonenumber : "" }" name="phoneNumber" id="inputPhone" pattern="(\(\+[0-9]{2}\)|0)([0-9]{9,10})" type="tel" placeholder="<%= messages.getString("nhap_phone") %>" title="Nhập số điện thoại của bạn" required>
                         </div>
                         <!-- Form Group (birthday)-->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="small mb-1"><span style="color: red;">*</span> <%= messages.getString("ngay_sinh") %></label>
                             <f:formatDate value="${sessionScope.accountdetails.birthday }" pattern="dd/MM/yyyy" var="birthday" />
                             <input class="form-control" id="datepicker" value="${sessionScope.accountdetails != null ? birthday : "" }"  type="text" name="birthday" placeholder="<%= messages.getString("nhap_dob") %>" title="Chọn ngày sinh của bạn" required>
+                        </div>
+                         <div class="col-md-4">
+                            <a href="${pageContext.request.contextPath }/key">Báo mất key</a>
                         </div>
                     </div>
                     <!-- Save changes button-->

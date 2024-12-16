@@ -8,11 +8,7 @@ public class Key {
 	private String publicKey;
 	private Date startTime;
 	private Date endTime;
-	@Override
-	public String toString() {
-		return "Key [id=" + id + ", userID=" + userID + ", publicKey=" + publicKey + ", startTime=" + startTime
-				+ ", endTime=" + endTime + "]";
-	}
+	private boolean status;
 	public int getId() {
 		return id;
 	}
@@ -43,15 +39,36 @@ public class Key {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-	public Key(int userID, String publicKey, Date startTime, Date endTime) {
+	public boolean isStatus() {
+		return status;
+	}
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	public Key(int id, int userID, String publicKey, Date startTime, Date endTime, boolean status) {
+		super();
+		this.id = id;
+		this.userID = userID;
+		this.publicKey = publicKey;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.status = status;
+	}
+	public Key() {
+		super();
+	}
+	public Key(int userID, String publicKey, Date startTime, Date endTime, boolean status) {
 		super();
 		this.userID = userID;
 		this.publicKey = publicKey;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.status = status;
 	}
-	public Key() {
-		super();
+	@Override
+	public String toString() {
+		return "Key [id=" + id + ", userID=" + userID + ", publicKey=" + publicKey + ", startTime=" + startTime
+				+ ", endTime=" + endTime + ", status=" + status + "]";
 	}
 	
 }
