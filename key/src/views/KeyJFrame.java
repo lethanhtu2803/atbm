@@ -27,6 +27,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
+import java.awt.Font;
 
 public class KeyJFrame extends JFrame {
 
@@ -76,7 +77,8 @@ public class KeyJFrame extends JFrame {
 		contentPane.setLayout(null);
 
 		jLabelMaHoaDonHang = new JLabel("Mã hóa đơn hàng");
-		jLabelMaHoaDonHang.setBounds(272, 0, 95, 23);
+		jLabelMaHoaDonHang.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		jLabelMaHoaDonHang.setBounds(272, 0, 217, 39);
 		contentPane.add(jLabelMaHoaDonHang);
 
 		jButtonUpLoadDonHang = new JButton("Upload Đơn Hàng");
@@ -85,13 +87,13 @@ public class KeyJFrame extends JFrame {
 				upload_actionPerformed(e);
 			}
 		});
-		jButtonUpLoadDonHang.setBounds(27, 22, 140, 39);
+		jButtonUpLoadDonHang.setBounds(27, 43, 140, 39);
 		contentPane.add(jButtonUpLoadDonHang);
 
 		scrollPane = new JScrollPane();
 		scrollPane.setBorder(
 				new TitledBorder(null, "\u0110\u01A1n h\u00E0ng", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		scrollPane.setBounds(313, 34, 205, 89);
+		scrollPane.setBounds(201, 34, 217, 104);
 		contentPane.add(scrollPane);
 
 		jTextAreaDonHang = new JTextArea();
@@ -103,13 +105,13 @@ public class KeyJFrame extends JFrame {
 				encryptDonHang_actionPerformed(e);
 			}
 		});
-		jButtonMaHoaDonHang.setBounds(27, 88, 140, 39);
+		jButtonMaHoaDonHang.setBounds(27, 127, 140, 39);
 		contentPane.add(jButtonMaHoaDonHang);
 
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBorder(new TitledBorder(null, "Chu\u1ED7i m\u00E3 h\u00F3a c\u1EE7a \u0111\u01A1n h\u00E0ng",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		scrollPane_1.setBounds(313, 134, 205, 89);
+		scrollPane_1.setBounds(444, 34, 237, 117);
 		contentPane.add(scrollPane_1);
 
 		jTextAreaMaHoaDonHang = new JTextArea();
@@ -119,7 +121,7 @@ public class KeyJFrame extends JFrame {
 		scrollPane_2 = new JScrollPane();
 		scrollPane_2
 				.setBorder(new TitledBorder(null, "Private Key", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		scrollPane_2.setBounds(27, 156, 198, 96);
+		scrollPane_2.setBounds(198, 174, 237, 117);
 		contentPane.add(scrollPane_2);
 
 		jTextAreaPrivateKey = new JTextArea();
@@ -132,7 +134,7 @@ public class KeyJFrame extends JFrame {
 				uploadPrivateKey_actionPerformed(e);
 			}
 		});
-		jButtonUploadPrivateKey.setBounds(259, 234, 123, 39);
+		jButtonUploadPrivateKey.setBounds(27, 252, 123, 39);
 		contentPane.add(jButtonUploadPrivateKey);
 
 		JButton jButtonKyDonHang = new JButton("Ký đơn hàng");
@@ -141,13 +143,13 @@ public class KeyJFrame extends JFrame {
 				kyDonHang_actionPerformed(e);
 			}
 		});
-		jButtonKyDonHang.setBounds(410, 242, 140, 48);
+		jButtonKyDonHang.setBounds(27, 374, 140, 48);
 		contentPane.add(jButtonKyDonHang);
 
 		scrollPane_3 = new JScrollPane();
 		scrollPane_3.setBorder(new TitledBorder(null, "Ch\u1EEF k\u00FD \u0111i\u1EC7n t\u1EED", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
-		scrollPane_3.setBounds(27, 281, 205, 86);
+		scrollPane_3.setBounds(198, 318, 237, 104);
 		contentPane.add(scrollPane_3);
 
 		jTextAreaChuKy = new JTextArea();
@@ -156,7 +158,7 @@ public class KeyJFrame extends JFrame {
 
 		JScrollPane messagePane = new JScrollPane();
 		messagePane.setBorder(new TitledBorder(null, "Messages", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		messagePane.setBounds(313, 320, 400, 200);
+		messagePane.setBounds(445, 427, 256, 123);
 		contentPane.add(messagePane);
 
 		jTextAreaMessages = new JTextArea();
@@ -169,8 +171,21 @@ public class KeyJFrame extends JFrame {
 				xacnhan_actionPerformed(e);
 			}
 		});
-		jButtonXacNhan.setBounds(56, 398, 128, 48);
+		jButtonXacNhan.setBounds(27, 484, 128, 48);
 		contentPane.add(jButtonXacNhan);
+		
+		JButton jButtonReset = new JButton("Reset");
+		jButtonReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jTextAreaDonHang.setText("");
+		        jTextAreaMaHoaDonHang.setText("");
+		        jTextAreaPrivateKey.setText("");
+		        jTextAreaChuKy.setText("");
+		        jTextAreaMessages.setText("");
+			}
+		});
+		jButtonReset.setBounds(244, 497, 89, 23);
+		contentPane.add(jButtonReset);
 
 		connectToWebSocket();
 	}
@@ -337,5 +352,4 @@ public class KeyJFrame extends JFrame {
 			e1.printStackTrace();
 		}
 	}
-
 }
