@@ -102,6 +102,7 @@
                                         <th>Mô tả</th>
                                         <th>Ngày bắt đầu</th>
                                         <th>Ngày hết hạn</th>
+                                        <th>Trạng thái</th>
                                         <th>Mã sale</th>
                                         <th>Hành động</th>
                                     </tr>
@@ -117,6 +118,7 @@
                                             <td><%= service.getDescription() %></td>
                                             <td><%= service.getCreated() %></td>
                                             <td><%= service.getEndService() %></td>
+                                            <td><%= service.getKey() != null ? "Đã xác thực" : "Chưa xác thực" %></td>
                                             <td><%= String.valueOf(service.getSaleID()).equals(0) ? service.getSaleID() : "Không áp dụng"%></td>
                                             <td><a href="${pageContext.request.contextPath }/admin/accountService?action=cancelService&accountServiceID=<%= service.getId() %>">Hủy dịch vụ</a> | <button class="sendChat" style="border: none;background: transparent;transform: translateY(2px);"><i class="fa-brands fa-rocketchat"></i></button></td>
                                         </tr>

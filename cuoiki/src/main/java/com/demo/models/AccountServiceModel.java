@@ -47,6 +47,7 @@ public class AccountServiceModel {
 				accountService.setCreated(resultSet.getTimestamp("created"));
 				accountService.setEndService(resultSet.getTimestamp("endService"));
 				accountService.setStatus(resultSet.getBoolean("status"));
+				accountService.setKey(resultSet.getString("key"));
 				accountServices.add(accountService);
 				Thread.sleep(2000);
 			}
@@ -118,6 +119,30 @@ public class AccountServiceModel {
 		}
 		
 		return accountServices;
+	}
+	public boolean deleteByServiceID(int serviceID) {
+	    boolean isDeleted = false;
+	    try {
+	        // Chuẩn bị câu lệnh SQL để xóa các bản ghi
+	        PreparedStatement preparedStatement = ConnectDB.connection().prepareStatement(
+	            "DELETE FROM account_service WHERE id = ?"
+	        );
+	        preparedStatement.setInt(1, serviceID);
+
+	        // Thực thi câu lệnh và kiểm tra số lượng bản ghi bị xóa
+	        int rowsAffected = preparedStatement.executeUpdate();
+	        if (rowsAffected > 0) {
+	            isDeleted = true; // Đánh dấu là đã xóa thành công
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        isDeleted = false;
+	        // TODO: handle exception
+	    } finally {
+	        ConnectDB.disconnect();
+	    }
+
+	    return isDeleted;
 	}
 	
 	public AccountService findAccountById(int id, int durationId) {
@@ -214,7 +239,7 @@ public class AccountServiceModel {
 		boolean status = true;
 		try {
 			PreparedStatement preparedStatement = ConnectDB.connection()
-			.prepareStatement("insert into account_service(accountID, serviceID, durationID, description, created, endService, status, saleID) values(?, ?, ?, ?, ?, ?, ?, ?)");
+			.prepareStatement("insert into account_service(accountID, serviceID, durationID, description, created, endService, status, saleID, `key`) values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			preparedStatement.setInt(1, accountService.getAccountID());
 			preparedStatement.setInt(2, accountService.getServiceID());
 			preparedStatement.setInt(3, accountService.getDurationID());
@@ -223,7 +248,7 @@ public class AccountServiceModel {
 			preparedStatement.setTimestamp(6, new Timestamp(accountService.getEndService().getTime()));
 			preparedStatement.setBoolean(7, accountService.isStatus());
 			preparedStatement.setInt(8, accountService.getSaleID());
-			
+			preparedStatement.setString(9, accountService.getKey());
 			status = preparedStatement.executeUpdate() > 0;
 			
 			
