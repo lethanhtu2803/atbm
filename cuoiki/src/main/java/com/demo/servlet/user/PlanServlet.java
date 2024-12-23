@@ -302,32 +302,49 @@ public class PlanServlet extends HttpServlet {
 		System.out.println(account.getId());
 		RSA rsa = new RSA();
 		Key key = keyModel.findByAccountID(account.getId());
-		System.out.println(key.getPublicKey().trim());
-		try {
-			System.out.println("chu ky: " + chuky.trim());
-			System.out.println("public key: " + key.getPublicKey().trim());
-			System.out.println(rsa.decryptWithPublicKey(chuky.trim(), key.getPublicKey().trim()));
-			if(request.getSession().getAttribute("accountService") != null) {
-				System.out.println(request.getSession().getAttribute("accountService"));
-				AccountService accountService = (AccountService) request.getSession().getAttribute("accountService");
-				System.out.println(accountService);
-				AccountServiceModel accountServiceModel = new AccountServiceModel();
-				if(accountServiceModel.register(accountService)) {
-					System.out.println("thanh cong");
-					request.getSession().setAttribute("msg", "Đăng ký gói thành công");
-					response.sendRedirect("plan");
-				} else {
-					System.out.println("k thanh cong");
+		if(key != null) {
+			try {
+				System.out.println("chu ky: " + chuky.trim());
+				System.out.println("public key: " + key.getPublicKey().trim());
+				System.out.println(rsa.decryptWithPublicKey(chuky.trim(), key.getPublicKey().trim()));
+				if(request.getSession().getAttribute("accountService") != null) {
+					System.out.println(request.getSession().getAttribute("accountService"));
+					AccountService accountService = (AccountService) request.getSession().getAttribute("accountService");
+					accountService.setKey(chuky.trim());
+					System.out.println(accountService);
+					AccountServiceModel accountServiceModel = new AccountServiceModel();
+					AccountService existAccountService = accountServiceModel.findAccountByAccountId(account.getId());
+					System.out.println("existAccountService: " + existAccountService);
+					if(existAccountService != null) {
+						System.out.println("xoa thanh cong");
+						boolean status = accountServiceModel.deleteByServiceID(existAccountService.getId());
+						System.out.println(status);
+					} else {
+						System.out.println("xoa that bai");
+					}
+					if(accountServiceModel.register(accountService)) {
+						System.out.println("thanh cong");
+						request.getSession().setAttribute("msg", "Đăng ký gói thành công");
+						response.sendRedirect("plan");
+					} else {
+						System.out.println("k thanh cong");
+					}
 				}
+				
+				
+			} catch (Exception e) {
+				request.getSession().setAttribute("msg", "Thao tác xác nhận chữ ký không đúng, vui lòng đăng ký gói lại");
+				response.sendRedirect("plan");
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
-			
-		} catch (Exception e) {
+		} else {
 			request.getSession().setAttribute("msg", "Thao tác xác nhận chữ ký không đúng, vui lòng đăng ký gói lại");
 			response.sendRedirect("plan");
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+	
+		
 		
 	}
 

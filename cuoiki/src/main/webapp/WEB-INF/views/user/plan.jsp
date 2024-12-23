@@ -229,6 +229,14 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 	<br>
 	<h4>Tỉ giá USD sang VND hiện tại: ${usdSellRate }</h4>
 </div>
+<%
+if (accountService != null) {
+%>
+	<div class="container"><span>Hiện tại bạn đang sử dụng gói <%=serviceModel.findByID(serviceId).getName()%>
+	với thời hạn <%=durationModel.findById(accountService.getDurationID()).getName()%></span></div>
+<%
+}
+%>
 
 <div class="wrapper">
 	<div class="pricing-content">
@@ -270,7 +278,8 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 											<%
 											for (Duration duration : durationModel.findAll()) {
 											%>
-											<option class="optionDurationID" value="<%=duration.getId()%>"><%=durationLanguageModel.find(duration.getId(), languageModel.findByLanguageID(language).getId()) != null
+											<option class="optionDurationID"
+												value="<%=duration.getId()%>"><%=durationLanguageModel.find(duration.getId(), languageModel.findByLanguageID(language).getId()) != null
 		? durationLanguageModel.find(duration.getId(), languageModel.findByLanguageID(language).getId()).getName()
 		: duration.getName()%></option>
 											<%
@@ -278,22 +287,15 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 											%>
 										</select>
 									</div>
-									<div class="plan-button">
-										<c:if test="<%=isBuyed%>">
-											<input type="submit" value="Mua ngay" disabled="disabled">
-										</c:if>
-										<c:if test="<%=!isBuyed%>">
-											<input type="submit" value="Mua ngay">
-										</c:if>
-										
-									</div>
-								
+
+
 								</div>
 							</div>
-								<button data-id="<%= service.getId() %>" class="muangay">Mua ngay</button>
-								
+							<button data-id="<%=service.getId()%>" class="muangay">Mua
+								ngay</button>
+
 						</form>
-						
+
 						<%
 						}
 						%>
@@ -372,15 +374,19 @@ DurationLanguageModel durationLanguageModel = new DurationLanguageModel();
 </div>
 <div id="dialog1" style="display: none;" title="Basic dialog">
 	<form action="${pageContext.request.contextPath}/plan" method="post">
-		<p>Mã hash đơn hàng của bạn là: <span id="mahash"></span></p>
-	<p>Chữ ký của bạn là: <span id="chuky"></span></p>
-	<input name="chuky" type="hidden" value="" id="chukyForm">
-	<input type="hidden" name="action" value="checkChuKy">
-	<button type="submit" id="batdauky">Kiểm tra chữ kí</button>
+		<p>
+			Mã hash đơn hàng của bạn là: <span id="mahash"></span>
+		</p>
+		<p>
+			Chữ ký của bạn là: <span id="chuky"></span>
+		</p>
+		<input name="chuky" type="hidden" value="" id="chukyForm"> <input
+			type="hidden" name="action" value="checkChuKy">
+		<button type="submit" id="batdauky">Kiểm tra chữ kí</button>
 	</form>
-	
 
-	
+
+
 </div>
 
 

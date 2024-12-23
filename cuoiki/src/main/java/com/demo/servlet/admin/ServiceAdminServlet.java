@@ -77,7 +77,7 @@ public class ServiceAdminServlet extends HttpServlet {
 		service.setStatus(false);
 		if(serviceModel.update(service)) {
 			afterDeleteService = serviceModel.findAll().size();
-			logModel.create(new Log(ConfigLog.clientPublicIP, "warning","AdminId: " + accountAdmin.getId() + " đã xóa gói dịch vụ có id là: " + id + " ra khỏi hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số gói dịch vụ trước khi xóa: " + beforeDeleteService, "Số gói dịch vụ sau khi xóa: " + afterDeleteService));
+//			logModel.create(new Log(ConfigLog.clientPublicIP, "warning","AdminId: " + accountAdmin.getId() + " đã xóa gói dịch vụ có id là: " + id + " ra khỏi hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số gói dịch vụ trước khi xóa: " + beforeDeleteService, "Số gói dịch vụ sau khi xóa: " + afterDeleteService));
 			request.getSession().setAttribute("msg", "Đã xóa dịch vụ thành công");
 			response.sendRedirect(request.getContextPath() + "/superadmin/service");
 			
@@ -130,7 +130,7 @@ public class ServiceAdminServlet extends HttpServlet {
 		int afterAddService = 0;
 		if(serviceModel.create(service)) {
 			afterAddService = serviceModel.findAll().size();
-			logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AdminId: " + accountAdmin.getId() + " đã thêm gói dịch vụ " + new String(name.getBytes("ISO-8859-1"), "UTF-8") + " vào hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số gói dịch vụ trước khi thêm: " + beforeAddService, "Số gói dịch vụ sau khi xóa: " + afterAddService));
+//			logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AdminId: " + accountAdmin.getId() + " đã thêm gói dịch vụ " + new String(name.getBytes("ISO-8859-1"), "UTF-8") + " vào hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số gói dịch vụ trước khi thêm: " + beforeAddService, "Số gói dịch vụ sau khi xóa: " + afterAddService));
 			service.setStatus(false);
 			serviceModel.update(service);
 			request.getSession().setAttribute("msg", "Đăng kí gói dịch vụ thành công");

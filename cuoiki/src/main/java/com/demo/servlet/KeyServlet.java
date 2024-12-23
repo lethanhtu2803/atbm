@@ -12,6 +12,7 @@ import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import com.demo.entities.Account;
 import com.demo.entities.Key;
 import com.demo.helpers.MD5;
 import com.demo.helpers.RSA;
@@ -47,7 +49,14 @@ public class KeyServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         if (action == null) {
-        	request.getRequestDispatcher("/WEB-INF/views/login/key.jsp").forward(request, response);
+        	   Account account = (Account) request.getSession().getAttribute("account");
+        		if(account == null) {
+        			request.getSession().setAttribute("msg", "Bạn chưa đăng nhập tài khoản");
+        			response.sendRedirect("login");
+        		} else {
+        			request.getRequestDispatcher("/WEB-INF/views/login/key.jsp").forward(request, response);
+        		}
+        
         } else {
             try {
                 if ("genKey".equals(action)) {
@@ -205,18 +214,38 @@ public class KeyServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response); // Forward tới JSP
         }
         protected void doPost_SaveKey(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        	  String publicKey = (String) request.getParameter("publicKey");
-       
-        	  	System.out.println(publicKey);
-        	  	KeyModel keyModel = new KeyModel();
-        	    Key key = new Key(1, publicKey, new Date(), null);
-                if(keyModel.create(key)) {
-                	  response.sendRedirect("login");
-                } else {
-                	System.out.println("Loi ko tao dc key");
+            String publicKey = request.getParameter("publicKey");
+            Account account = (Account) request.getSession().getAttribute("account");
+
+            System.out.println(publicKey);
+            KeyModel keyModel = new KeyModel();
+
+            List<Key> existKey = keyModel.findKeysByAccountID(account.getId());
+            boolean isUpdated = false;
+
+            if (existKey != null && !existKey.isEmpty()) {
+                Key lastKey = existKey.get(existKey.size() - 1);
+                lastKey.setStatus(false);
+                lastKey.setEndTime(new Date());
+
+                System.out.println(lastKey);
+
+                if (!keyModel.updateKey(lastKey)) {
+                    System.out.println("Lỗi: Không thể cập nhật key");
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Không thể cập nhật key");
+                    return;
                 }
-            
-        	  	
+                isUpdated = true;
+            }
+
+            Key newKey = new Key(account.getId(), publicKey, new Date(), null, true);
+            if (keyModel.create(newKey)) {
+                System.out.println("Key mới đã được tạo" + (isUpdated ? " và cập nhật thành công" : ""));
+                response.sendRedirect("login");
+            } else {
+                System.out.println("Lỗi: Không thể tạo key mới");
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Không thể tạo key mới");
+            }
         }
 
     

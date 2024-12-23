@@ -12,21 +12,9 @@ public class AccountService {
 	private Date endService;
 	private boolean status;
 	private int saleID;
+	private String key;
 	public AccountService() {
 		super();
-	}
-	public AccountService(int id, int accountID, int serviceID, int durationID, String description, Date created,
-			Date endService, boolean status, int saleID) {
-		super();
-		this.id = id;
-		this.accountID = accountID;
-		this.serviceID = serviceID;
-		this.durationID = durationID;
-		this.description = description;
-		this.created = created;
-		this.endService = endService;
-		this.status = status;
-		this.saleID = saleID;
 	}
 	public int getId() {
 		return id;
@@ -82,11 +70,33 @@ public class AccountService {
 	public void setSaleID(int saleID) {
 		this.saleID = saleID;
 	}
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+	public AccountService(int id, int accountID, int serviceID, int durationID, String description, Date created,
+			Date endService, boolean status, int saleID, String key) {
+		super();
+		this.id = id;
+		this.accountID = accountID;
+		this.serviceID = serviceID;
+		this.durationID = durationID;
+		this.description = description;
+		this.created = created;
+		this.endService = endService;
+		this.status = status;
+		this.saleID = saleID;
+		this.key = key;
+	}
 	@Override
 	public String toString() {
 		return "AccountService [id=" + id + ", accountID=" + accountID + ", serviceID=" + serviceID + ", durationID="
 				+ durationID + ", description=" + description + ", created=" + created + ", endService=" + endService
-				+ ", status=" + status + ", saleID=" + saleID + "]";
+				+ ", status=" + status + ", saleID=" + saleID + ", key=" + key + "]";
 	}
+
+	
 	
 }

@@ -94,7 +94,7 @@ public class PostApartmentAdminServlet extends HttpServlet {
 		if(postImageModel.delete(id)) {
 			if(postModel.delete(id)) {
 				afterDeletePost = postModel.findAllInAdmin().size();
-				logModel.create(new Log(ConfigLog.clientPublicIP, "warning","AdminId: " + accountAdmin.getId() + " đã xóa bài đăng có id là: " + id + " ra khỏi hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số bài đăng trước khi xóa: " + beforeDeletePost, "Số bài đăng sau khi xóa: " + afterDeletePost));
+//				logModel.create(new Log(ConfigLog.clientPublicIP, "warning","AdminId: " + accountAdmin.getId() + " đã xóa bài đăng có id là: " + id + " ra khỏi hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số bài đăng trước khi xóa: " + beforeDeletePost, "Số bài đăng sau khi xóa: " + afterDeletePost));
 				request.getSession().setAttribute("msg", "Đã xóa bài đăng thành công");
 				response.sendRedirect(request.getContextPath() + "/admin/postapartment");
 			} else {
@@ -104,7 +104,7 @@ public class PostApartmentAdminServlet extends HttpServlet {
 		} else {
 			if(postModel.delete(id)) {
 				afterDeletePost = postModel.findAllInAdmin().size();
-				logModel.create(new Log(ConfigLog.clientPublicIP, "warning","AdminId: " + accountAdmin.getId() + " đã xóa bài đăng có id là: " + id + " ra khỏi hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số bài đăng trước khi xóa: " + beforeDeletePost, "Số bài đăng sau khi xóa: " + afterDeletePost));
+//				logModel.create(new Log(ConfigLog.clientPublicIP, "warning","AdminId: " + accountAdmin.getId() + " đã xóa bài đăng có id là: " + id + " ra khỏi hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số bài đăng trước khi xóa: " + beforeDeletePost, "Số bài đăng sau khi xóa: " + afterDeletePost));
 				request.getSession().setAttribute("msg", "Đã xóa bài đăng thành công");
 				response.sendRedirect(request.getContextPath() + "/admin/postapartment");
 			} else {

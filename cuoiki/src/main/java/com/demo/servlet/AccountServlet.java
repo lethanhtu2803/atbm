@@ -1,6 +1,7 @@
 package com.demo.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -80,9 +81,24 @@ public class AccountServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		if (action == null) {
 			doPost_UpdateAccount(request, response);
+		} else if(action.equals("matkey")) {
+			doPost_MatKey(request, response);
 		}
 	}
-
+	protected void doPost_MatKey(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		Account account = (Account) request.getSession().getAttribute("account");
+		AccountModel accountModel = new AccountModel();
+		String password = request.getParameter("password");
+		PrintWriter printWriter = response.getWriter();
+		
+		if(accountModel.login(account.getUsername(), password)) {
+			printWriter.write("valid");
+		} else {
+			printWriter.write("invalid");
+		}
+	}
 	protected void doPost_UpdateAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
