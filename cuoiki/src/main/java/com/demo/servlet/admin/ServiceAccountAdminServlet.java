@@ -149,7 +149,7 @@ public class ServiceAccountAdminServlet extends HttpServlet {
 		if(accountServiceModel.register(accountService)) {
 			account.setStatus(false);
 			afterAddAccountService = durationModel.findAll().size();
-			logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AdminId: " + accountAdmin.getId() + " đã thêm người đăng kí gói dịch vụ " + accountService.getDescription() + " vào hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số lượng người đăng kí dịch vụ gói " + serviceModel.findByID(serviceID).getName() + " trước khi thêm: " + beforeAddAccountService, "Số lượng người đăng kí dịch vụ gói " + serviceModel.findByID(serviceID).getName() + " sau khi thêm: " + afterAddAccountService));
+//			logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AdminId: " + accountAdmin.getId() + " đã thêm người đăng kí gói dịch vụ " + accountService.getDescription() + " vào hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Số lượng người đăng kí dịch vụ gói " + serviceModel.findByID(serviceID).getName() + " trước khi thêm: " + beforeAddAccountService, "Số lượng người đăng kí dịch vụ gói " + serviceModel.findByID(serviceID).getName() + " sau khi thêm: " + afterAddAccountService));
 			accountServiceModel.update(account);
 			request.getSession().setAttribute("msg", "Đăng kí gói dịch vụ thành công");
 			response.sendRedirect(request.getContextPath() + "/admin/serviceAccount");

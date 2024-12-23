@@ -103,7 +103,7 @@ public class PaymentServlet extends HttpServlet {
 							account.getId(), orderInfo, paymentType, transactionNo);
 					TransactionModel transactionModel = new TransactionModel();
 					if (accountDetailsModel.updateBalance(accountdetails) && transactionModel.create(transaction)) {
-						logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AccountID: " + account.getId() + " nạp tiền vào tài khoản bằng VNPay",new ConfigLog().ipconfig(req).getCountryLong(), new java.util.Date(), "Số tiền trước khi nạp: " + beforeTransaction, "Số tiền sau khi nạp: " + afterTransaction));
+//						logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AccountID: " + account.getId() + " nạp tiền vào tài khoản bằng VNPay",new ConfigLog().ipconfig(req).getCountryLong(), new java.util.Date(), "Số tiền trước khi nạp: " + beforeTransaction, "Số tiền sau khi nạp: " + afterTransaction));
 						req.getSession().removeAttribute("accountdetails");
 						req.getSession().setAttribute("accountdetails",
 								accountDetailsModel.findAccountByAccountID(account.getId()));
@@ -206,7 +206,7 @@ public class PaymentServlet extends HttpServlet {
 							account.getId(), orderInfo, paymentType, transactionNo);
 					TransactionModel transactionModel = new TransactionModel();
 					if (accountDetailsModel.updateBalance(accountdetails) && transactionModel.create(transaction)) {
-						logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AccountID: " + account.getId() + " nạp tiền vào tài khoản bằng PayPal",new ConfigLog().ipconfig(req).getCountryLong(), new java.util.Date(), "Số tiền trước khi nạp: " + beforeTransaction, "Số tiền sau khi nạp: " + afterTransaction));
+//						logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AccountID: " + account.getId() + " nạp tiền vào tài khoản bằng PayPal",new ConfigLog().ipconfig(req).getCountryLong(), new java.util.Date(), "Số tiền trước khi nạp: " + beforeTransaction, "Số tiền sau khi nạp: " + afterTransaction));
 						req.getSession().removeAttribute("accountdetails");
 						req.getSession().setAttribute("accountdetails",
 								accountDetailsModel.findAccountByAccountID(account.getId()));

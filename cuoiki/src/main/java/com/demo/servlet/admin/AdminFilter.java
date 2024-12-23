@@ -53,7 +53,7 @@ public class AdminFilter extends HttpFilter implements Filter {
 			chain.doFilter(request, response);
 		
 		} else {
-			logModel.create(new Log(ConfigLog.clientPublicIP, "danger","Đăng nhập admin khi chưa có quyền",new ConfigLog().ipconfig(httpRequest).getCountryLong(), new java.util.Date(), null, null));
+//			logModel.create(new Log(ConfigLog.clientPublicIP, "danger","Đăng nhập admin khi chưa có quyền",new ConfigLog().ipconfig(httpRequest).getCountryLong(), new java.util.Date(), null, null));
 			httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
 		}
 		

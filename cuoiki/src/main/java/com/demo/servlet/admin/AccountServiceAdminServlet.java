@@ -74,7 +74,7 @@ public class AccountServiceAdminServlet extends HttpServlet {
 		AccountService accountService = accountServiceModel.findById(Integer.parseInt(accountServiceID));
 		accountService.setStatus(false);
 		if(accountServiceModel.update(accountService)) {
-			logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AdminId: " + accountAdmin.getId() + " đã hủy trạng thái người đăng kí dịch vụ có ID là: " + accountService.getId() + " vào hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Trạng thái trước khi hủy: còn hiệu lực", "Trạng thái sau khi hủy: không còn hiệu lực"));
+//			logModel.create(new Log(ConfigLog.clientPublicIP, "alert","AdminId: " + accountAdmin.getId() + " đã hủy trạng thái người đăng kí dịch vụ có ID là: " + accountService.getId() + " vào hệ thống",new ConfigLog().ipconfig(request).getCountryLong(), new java.util.Date(), "Trạng thái trước khi hủy: còn hiệu lực", "Trạng thái sau khi hủy: không còn hiệu lực"));
 			request.getSession().setAttribute("msg", "Hủy gói dịch vụ thành công");
 			response.sendRedirect(request.getContextPath() + "/admin/accountService");
 		} else {
